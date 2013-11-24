@@ -9,16 +9,14 @@ This module takes as input the HTML from a google search results and return a js
 query_string : "",
 ads : [
     {
-        Domain : '', // e.g. ebay.com or amazon.com
+        Domain : '', // e.g. ebay.com or amazon.com  (the domain portion of the display url)
         Title : '', 
-        Line1 : '',
-        Line2 : '',  // if just one line enter it here either wise concat
-        line1and2 : 
-
+        Line1 : '', 
+        Line2 : '',  // If just one line - split by ' - ' to produce line 1 and line 2
         DisplayURL : '',
         URL : '',
         IsTop3 : true,
-        IsBottom : false
+        IsBottom : false,
         Extensions : {  // http://cl.ly/0h0f2Y1h0d0g
             Review : {
                 Quote : '',
@@ -30,7 +28,7 @@ ads : [
             }
             Ratings : {
                 Count : 999,
-                Stars : 5
+                Rating : 8.3
             },
             SiteLinks : [
                 {
