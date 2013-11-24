@@ -1,7 +1,7 @@
 google-search-parser
 ====================
 
-Parses into a json structure results and ads of a google search page
+Parses  ads, results from the HTML of  google search page results into json.
 
 --
 This module takes as input the HTML from a google search results and return a json structure of the following form
