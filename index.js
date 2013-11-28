@@ -1,0 +1,100 @@
+var cheerio = require('cheerio');
+var fs = require('fs');
+var needle = require('needle');
+var urlParser = require('url');
+var querystring = require('querystring');
+
+function log(obj) {
+  console.log(JSON.stringify(obj, null, 2));
+}
+
+var Parser = {
+  defaultHeaders: {
+    'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1677.0 Safari/537.36"
+  },
+
+  parseFile: function (file, callback) {
+    var data = fs.readFileSync(file).toString();
+    var result = Parser.parseString(data);
+    if (callback) callback(result);
+    return result;
+  },
+
+  parseUrl: function (url, callback) {
+    needle.get(url, this.defaultHeaders, function (error, response, body) {
+      var result = Parser.parseString(body);
+      if (callback) callback(result);
+    });
+  },
+
+  parseWords: function (searchable, callback) {
+    var query = {output: "search", sclient: "psy-ab", q: searchable, gbv: "1" }; //, sei: "CpyWUqHYO8ParAezgoDgDw" };
+    var url = "https://www.google.com/search?" + querystring.stringify(query);
+    this.parseUrl(url, callback);
+  },
+
+  parseString: function (string) {
+    var $ = cheerio.load(string);
+    var result = {results: [], ads: []};
+
+    result.query_string = $('#sbhost').val();
+
+    $('#ires > ol > li').each(function(i, el) {
+      el = $(el);
+
+      var type = this.detectType(el);
+
+      var row = {
+        Title: el.find('h3').text(),
+        DisplayURL: el.find('cite').text(),
+        URL: el.find('h3 a').attr('href'),
+        Text: this.scrapText(el),
+        Extensions: []
+      };
+
+      if (type != 'images') {
+        row.DirectUrl = this.urlFromParams(row.URL, 'q');
+      }
+
+      result.results.push(row);
+
+    }.bind(this));
+
+    return result;
+  },
+
+  // get text for search slippet
+  scrapText: function (el) {
+    var content = el.find('h3 + div > span');
+    if (content.length) {
+      var text = content.text();
+      return text.replace(/^(\d+ days? ago|\d\d? hours? ago|\d\d? \w{3,4} \d{4}) ...\s*/, '');
+    }
+
+    content = el.find('cite:contains("www.youtube.com/watch") + span');
+    if (content.length) {
+      content.find('> span').remove();
+      return content.text();
+    }
+  },
+
+  // type of result
+  // plain, youtube, images
+  detectType: function (el) {
+    if (el.find('cite:contains("www.youtube.com/watch")').length) {
+      return 'youtube';
+    } else if (el.find('h3 a[href^="/images?"]').length) {
+      return 'images';
+    } else {
+      return 'plain';
+    }
+  },
+
+  // get direct url from search result url
+  urlFromParams: function (url, key) {
+    var u = urlParser.parse(url);
+    return querystring.parse(u.query)[key];
+  },
+};
+
+exports['google-search-parser'] = Parser;
