@@ -6,11 +6,12 @@ Parses  ads, results from the HTML of  google search page results into json.
 ### Usage:
 
 ```javascript
-  Parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1");
-  Parser.parseFile('./test/data/example.html');
-  Parser.parseFile('./test/data/moto-g.html');
-  Parser.parseWords('moto x', function(result) {
-    log(result);
+  var parser = require('google-search-parser')
+  parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1");
+  parser.parseFile('./test/data/example.html');
+  parser.parseFile('./test/data/moto-g.html');
+  parser.parseWords('moto x', function(result) {
+    console.log(result);
   });
 ```
 

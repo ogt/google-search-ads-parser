@@ -48,11 +48,12 @@ var Parser = {
         Title: el.find('h3').text(),
         DisplayURL: el.find('cite').text(),
         URL: el.find('h3 a').attr('href'),
-        Text: this.scrapText(el),
+        Text: this.scrapText(el, type),
+        Type: type,
         Extensions: []
       };
 
-      if (type != 'images') {
+      if (row.Type != 'images') {
         row.DirectUrl = this.urlFromParams(row.URL, 'q');
       }
 
@@ -64,27 +65,34 @@ var Parser = {
   },
 
   // get text for search slippet
-  scrapText: function (el) {
-    var content = el.find('h3 + div > span');
-    if (content.length) {
+  scrapText: function (el, type) {
+    if (type == 'plain') {
+      var content = el.find('h3 + div > span');
       var text = content.text();
       return text.replace(/^(\d+ days? ago|\d\d? hours? ago|\d\d? \w{3,4} \d{4}) ...\s*/, '');
     }
 
-    content = el.find('cite:contains("www.youtube.com/watch") + span');
-    if (content.length) {
+    if (type == 'video') {
+      content = el.find('cite + span');
       content.find('> span').remove();
+      return content.text();
+    }
+
+    if (type == 'news') {
+      var content = el.find('td > div > div > cite').parent().nextAll('div');
       return content.text();
     }
   },
 
   // type of result
-  // plain, youtube, images
+  // plain, youtube, images, news
   detectType: function (el) {
-    if (el.find('cite:contains("www.youtube.com/watch")').length) {
-      return 'youtube';
+    if (el.find('cite:contains("www.youtube.com/watch")').length || el.find('td > div > a > div').text().match(/►.*/)) {
+      return 'video';
     } else if (el.find('h3 a[href^="/images?"]').length) {
       return 'images';
+    } else if (el.find('a[href*="tbm=nws"]').length) {
+      return 'news';
     } else {
       return 'plain';
     }
@@ -97,4 +105,6 @@ var Parser = {
   },
 };
 
-exports['google-search-parser'] = Parser;
+for (var i in Parser) {
+  exports[i] = Parser[i];
+}

@@ -1,10 +1,10 @@
-TAP=node_modules/.bin/tap
-LINT=node_modules/.bin/jshint
+MOCHA=node_modules/.bin/mocha
+LINT=node_modules/jshint/bin/jshint
 
-test:   lint
-	$(TAP) test/*.js
+test: lint; \
+    $(MOCHA) -R nyan
 
-lint:
-	$(LINT) index.js
-	$(LINT) test/*.js
-  
+lint: \
+    $(LINT) index.js \
+    $(LINT) test/*.js
+
