@@ -34,7 +34,7 @@ var Parser = {
   },
 
   parseString: function (string) {
-    var $ = cheerio.load(string);
+    var $ = this.$ = cheerio.load(string);
     var result = {results: [], ads: []};
 
     result.query_string = $('#sbhost').val();
@@ -48,6 +48,8 @@ var Parser = {
         Title: el.find('h3').text(),
         DisplayURL: el.find('cite').text(),
         URL: el.find('h3 a').attr('href'),
+        CachedUrl: el.find('a:contains("Cached")').attr('href'),
+        SimularUrl: el.find('a:contains("Similar")').attr('href'),
         Text: this.scrapText(el, type),
         Type: type,
         Extensions: []
@@ -55,7 +57,10 @@ var Parser = {
 
       if (row.Type != 'images') {
         row.DirectUrl = this.urlFromParams(row.URL, 'q');
+        row.Domain = urlParser.parse(row.DirectUrl).host;
       }
+
+      if (row.Type == 'plain') this.parseSiteLinks(row, el);
 
       result.results.push(row);
 
@@ -95,6 +100,27 @@ var Parser = {
       return 'news';
     } else {
       return 'plain';
+    }
+  },
+
+  parseSiteLinks: function (row, el) {
+    var table = el.find('table table');
+    if (table.length) {
+      var siteLinks = [];
+
+      table.find('td:not([colspan]) > div').each(function(i, cell) {
+        cell = this.$(cell);
+        var link = {
+          Title: cell.find('h3').text(),
+          URL: cell.find('h3 a').attr('href'),
+          Text: cell.find('div div').text()
+        };
+
+        link.DirectURL = this.urlFromParams(link.URL, 'q');
+        siteLinks.push(link);
+      }.bind(this));
+
+      row.Extensions.Sitelinks = siteLinks;
     }
   },
 
