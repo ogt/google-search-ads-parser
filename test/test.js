@@ -5,6 +5,7 @@ var assert = require("assert");
 var parser = require("../index");
 
 describe('Parser', function() {
+  this.timeout(15000);
 
   it('should parse query_string', function() {
     var res = parser.parseFile('./test/data/example.html');
@@ -89,4 +90,15 @@ describe('Parser', function() {
     assert.equal(row2.Extensions.Rating.scoreOf, 10);
     assert.equal(row2.Extensions.Rating.reviewBy, 'Andrew Williams');
   });
+
+  it('should parse ads', function() {
+    var res = parser.parseFile('./test/data/moto-g.html');
+    //console.log(res.ads);
+    var res = parser.parseFile('./test/data/android.html');
+    //console.log(res.ads);
+    var res = parser.parseFile('./test/data/hotel.html');
+    //console.log(res.ads);
+  });
 });
+
+require('./test_rich.js')
