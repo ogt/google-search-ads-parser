@@ -1,3 +1,6 @@
+/* global it */
+/* global describe */
+
 var assert = require("assert");
 var parser = require("../index");
 
@@ -8,7 +11,7 @@ describe('Parser', function() {
     assert.equal(res.query_string, 'racoon');
   });
 
-/*
+/**/
   it('should parse from url', function(done) {
     parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1", function(res) {
       assert.equal(res.query_string, 'racoon');
@@ -22,7 +25,7 @@ describe('Parser', function() {
       done();
     });
   });
-*/
+/**/
 
   it('should parse serach results', function() {
     var res = parser.parseFile('./test/data/moto-g.html');
@@ -70,5 +73,20 @@ describe('Parser', function() {
     assert.equal(first.Extensions.Sitelinks[0].URL.length > 1, true);
     assert.equal(first.Extensions.Sitelinks[0].Text, "Log in and get to work. Remember me \nnext time. Forgot password? oDesk.");
     assert.equal(first.Extensions.Sitelinks[0].DirectURL, 'https://www.odesk.com/login');
+  });
+
+  it('should parse rating', function() {
+    var res = parser.parseFile('./test/data/moto-g.html');
+    var row = res.results[2];
+    assert.equal(row.Extensions.Rating.stars, 5);
+    assert.equal(row.Extensions.Rating.score, 10);
+    assert.equal(row.Extensions.Rating.scoreOf, 10);
+    assert.equal(row.Extensions.Rating.votes, 2);
+
+    var row2 = res.results[9];
+    assert.equal(row2.Extensions.Rating.stars, 5);
+    assert.equal(row2.Extensions.Rating.score, 10);
+    assert.equal(row2.Extensions.Rating.scoreOf, 10);
+    assert.equal(row2.Extensions.Rating.reviewBy, 'Andrew Williams');
   });
 });

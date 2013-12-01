@@ -60,7 +60,8 @@ var Parser = {
         row.Domain = urlParser.parse(row.DirectUrl).host;
       }
 
-      if (row.Type == 'plain') this.parseSiteLinks(row, el);
+      if (row.Type == 'plain') this.parseExtensionSiteLinks(row, el);
+      this.parseExtensionRating(row, el);
 
       result.results.push(row);
 
@@ -71,8 +72,10 @@ var Parser = {
 
   // get text for search slippet
   scrapText: function (el, type) {
+    var content;
+
     if (type == 'plain') {
-      var content = el.find('h3 + div > span');
+      content = el.find('h3 + div > span');
       var text = content.text();
       return text.replace(/^(\d+ days? ago|\d\d? hours? ago|\d\d? \w{3,4} \d{4}) ...\s*/, '');
     }
@@ -84,7 +87,7 @@ var Parser = {
     }
 
     if (type == 'news') {
-      var content = el.find('td > div > div > cite').parent().nextAll('div');
+      content = el.find('td > div > div > cite').parent().nextAll('div');
       return content.text();
     }
   },
@@ -103,7 +106,7 @@ var Parser = {
     }
   },
 
-  parseSiteLinks: function (row, el) {
+  parseExtensionSiteLinks: function (row, el) {
     var table = el.find('table table');
     if (table.length) {
       var siteLinks = [];
@@ -124,11 +127,33 @@ var Parser = {
     }
   },
 
+  parseExtensionRating: function (row, el) {
+    var ratingNode = el.find('div.star div');
+
+    if (ratingNode.length) {
+      var rating = {
+        stars: parseInt(ratingNode.css('width'), 10) / 65 * 5
+      };
+
+      // Rating: 10/10 - 2 votes
+      // Rating: 10/10 - Review by Andrew Williams
+      var ratingText = ratingNode.parent().parent().text();
+      if (ratingText.match(/Rating: \d{2}\/\d{2}/)) {
+        var parts = ratingText.match(/Rating: (\d{1,2})\/(\d{1,2}).\-.((\d+)\svotes)?(Review by (.+))?/);
+        rating.score = parts[1];
+        rating.scoreOf = parts[2];
+        if (parts[4]) rating.votes = parts[4];
+        if (parts[6]) rating.reviewBy = parts[6];
+      }
+      row.Extensions.Rating = rating;
+    }
+  },
+
   // get direct url from search result url
   urlFromParams: function (url, key) {
     var u = urlParser.parse(url);
     return querystring.parse(u.query)[key];
-  },
+  }
 };
 
 for (var i in Parser) {
