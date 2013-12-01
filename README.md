@@ -1,5 +1,6 @@
 google-search-parser
 ====================
+[![Build Status](https://travis-ci.org/ogt/google-search-parser.png)](https://travis-ci.org/ogt/google-search-parser)
 
 Parses  ads, results from the HTML of  google search page results into json.
 
