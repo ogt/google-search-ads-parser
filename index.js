@@ -3,6 +3,7 @@ var fs = require('fs');
 var needle = require('needle');
 var urlParser = require('url');
 var querystring = require('querystring');
+var richParser;
 
 function log(obj) {
   console.log(JSON.stringify(obj, null, 2));

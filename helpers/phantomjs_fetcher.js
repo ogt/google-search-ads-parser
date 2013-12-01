@@ -172,8 +172,8 @@ page.open(url, function(status) {
 
   result.ads = page.evaluate(getAds, parseSiteLinks, parseSocial, parseRating, parseReview);
 
-  if (url.match(/https?:\/\//)) savePage(page, 'test/rich_data/1.html');
-  page.render("test.png", { format: "png" });
+  //if (url.match(/https?:\/\//)) savePage(page, 'test/rich_data/1.html');
+  //page.render("test.png", { format: "png" });
 
   log(result);
   phantom.exit();
