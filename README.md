@@ -1,16 +1,15 @@
-google-search-parser
+google-search-ads-parser
 ====================
+[![Build Status](https://travis-ci.org/ogt/google-search-ads-parser.png)](https://travis-ci.org/ogt/google-search-ads-parser)
 
 Parses  ads, results from the HTML of  google search page results into json.
 
 ### Usage:
 
 ```javascript
-  var parser = require('google-search-parser')
-  parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1");
+  var parser = require('google-search-ads-parser')
   parser.parseFile('./test/data/example.html');
   parser.parseFile('./test/data/moto-g.html');
-  parser.parseWords('moto x', function(result) {
     console.log(result);
   });
 
@@ -35,7 +34,8 @@ ads : [
         Line2 : '',  // If just one line - split by ' - ' to produce line 1 and line 2
         DisplayURL : '',
         URL : '',
-        IsTop3 : true,
+        Position : 1, // position 1 means that this is ad is the very first one from top to bottom
+        IsTop : true,
         IsBottom : false,
         Extensions : {  // http://cl.ly/0h0f2Y1h0d0g
             Review : {
@@ -58,9 +58,6 @@ ads : [
                 ...
             ],
             HasCallExtension : True/False
-            HasLocation : True/False
-            HasMobileApp : True/False
-            HasDeal : True/False
             HasSocial : True/False
             HasSiteLinks : True/False
             HasRatings : True/False
@@ -68,33 +65,6 @@ ads : [
          }
 
     },
-    ...
-]
-results : [
-    {
-        Domain :
-        Title
-        URL
-        Text
-        Extensions : {
-           PublishedBy : { // http://cl.ly/1D3J0F262o2E
-               Photo :
-               Who :
-               Date :
-               Followers :
-           }
-           Sitelinks : [   // http://cl.ly/3l0H1U390R0b
-               {
-                   Title
-                   URL
-                   Text
-               }
-               ..
-
-           ]
-        }
-
-    }
     ...
 ]
 ```
