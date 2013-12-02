@@ -9,7 +9,6 @@ describe('parser.extended', function () {
 
   it('should parse file', function() {
     var data = parser.extended.parseFile('test/rich_data/1.html');
-
     var first = data.ads[0];
 
     assert.equal(first.Title, 'Fly with AirAsia - AirAsia.com');
@@ -17,8 +16,6 @@ describe('parser.extended', function () {
     assert.equal(first.DisplayURL, 'www.airasia.com/');
     assert.equal(first.Domain, 'www.airasia.com');
     assert.equal(first.Line1, 'Find Lowest Fare to your Dream Destination. Book Online Now!');
-    assert.equal(first.IsBottom, false);
-    assert.equal(first.IsTop, true);
 
     var second = data.ads[1].Extensions;
 
@@ -32,5 +29,19 @@ describe('parser.extended', function () {
     assert.equal(second.SiteLinks[0].Title, 'Best Business Class');
     assert.equal(second.SiteLinks[1].Title, 'Affordable 5-Star Economy');
     assert.equal(second.SiteLinks[2].Title, 'Discover Where We Fly');
+  });
+
+  it('should parse position', function() {
+    var data = parser.extended.parseFile('test/rich_data/1.html');
+    var first = data.ads[0];
+
+    assert.equal(first.IsBottom, false);
+    assert.equal(first.IsTop, true);
+    assert.equal(first.IsSide, false);
+    assert.equal(first.Position, 1);
+
+    assert.equal(data.ads[2].Position, 3);
+    assert.equal(data.ads[5].IsSide, true);
+    assert.equal(data.ads.length, 11);
   });
 });
