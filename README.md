@@ -30,7 +30,8 @@ ads : [
         Line2 : '',  // If just one line - split by ' - ' to produce line 1 and line 2
         DisplayURL : '',
         URL : '',
-        IsTop3 : true,
+        Position : 1, // position 1 means that this is ad is the very first one from top to bottom
+        IsTop : true,
         IsBottom : false,
         Extensions : {  // http://cl.ly/0h0f2Y1h0d0g
             Review : {
@@ -53,9 +54,6 @@ ads : [
                 ...
             ],
             HasCallExtension : True/False
-            HasLocation : True/False
-            HasMobileApp : True/False
-            HasDeal : True/False
             HasSocial : True/False
             HasSiteLinks : True/False
             HasRatings : True/False
