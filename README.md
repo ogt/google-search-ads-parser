@@ -1,13 +1,13 @@
-google-search-parser
+google-search-ads-parser
 ====================
-[![Build Status](https://travis-ci.org/ogt/google-search-parser.png)](https://travis-ci.org/ogt/google-search-parser)
+[![Build Status](https://travis-ci.org/ogt/google-search-ads-parser.png)](https://travis-ci.org/ogt/google-search-ads-parser)
 
 Parses  ads, results from the HTML of  google search page results into json.
 
 ### Usage:
 
 ```javascript
-  var parser = require('google-search-parser')
+  var parser = require('google-search-ads-parser')
   parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1");
   parser.parseFile('./test/data/example.html');
   parser.parseFile('./test/data/moto-g.html');
