@@ -12,6 +12,12 @@ Parses  ads, results from the HTML of  google search page results into json.
   parser.parseFile('./test/data/moto-g.html');
     console.log(result);
   });
+
+  // slower but ads complete data
+  parser.rich().parseUrl('test/rich_data/1.html', function(data) {
+    console.log(data);
+  });
+
 ```
 
 ### Result format:

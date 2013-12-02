@@ -1,31 +1,19 @@
+/* global it */
+/* global describe */
+
 var assert = require("assert");
 var parser = require("../index");
 
-describe('Parser', function() {
+describe('parser.static', function() {
+  this.timeout(15000);
 
   it('should parse query_string', function() {
-    var res = parser.parseFile('./test/data/example.html');
+    var res = parser.static.parseFile('./test/data/example.html');
     assert.equal(res.query_string, 'racoon');
   });
 
-/*
-  it('should parse from url', function(done) {
-    parser.parseUrl("https://www.google.com/search?output=search&sclient=psy-ab&q=racoon&gbv=1", function(res) {
-      assert.equal(res.query_string, 'racoon');
-      done();
-    });
-  });
-
-  it('should search by words', function(done) {
-    parser.parseWords('moto x', function(result) {
-      assert.equal(result.query_string, 'moto x');
-      done();
-    });
-  });
-*/
-
   it('should parse serach results', function() {
-    var res = parser.parseFile('./test/data/moto-g.html');
+    var res = parser.static.parseFile('./test/data/moto-g.html');
     assert.equal(res.results.length, 10);
 
     var first = res.results[0];
@@ -43,7 +31,7 @@ describe('Parser', function() {
   });
 
   it('should parse other file', function () {
-    var res = parser.parseFile('./test/data/mentalist.html');
+    var res = parser.static.parseFile('./test/data/mentalist.html');
 
     [0, 1, 3, 4, 7].forEach(function(i) {
       assert.equal(res.results[i].Type, 'video');
@@ -53,7 +41,7 @@ describe('Parser', function() {
   });
 
   it('should test parsing images', function() {
-    var res = parser.parseFile('./test/data/example.html');
+    var res = parser.static.parseFile('./test/data/example.html');
 
     var second = res.results[1];
     assert.equal(second.Title, 'Images for racoon');
@@ -61,7 +49,7 @@ describe('Parser', function() {
   });
 
   it('should parse sub links', function() {
-    var res = parser.parseFile('./test/data/odesk.html');
+    var res = parser.static.parseFile('./test/data/odesk.html');
 
     var first = res.results[0];
     //console.log(first.Extensions.Sitelinks);
@@ -71,4 +59,30 @@ describe('Parser', function() {
     assert.equal(first.Extensions.Sitelinks[0].Text, "Log in and get to work. Remember me \nnext time. Forgot password? oDesk.");
     assert.equal(first.Extensions.Sitelinks[0].DirectURL, 'https://www.odesk.com/login');
   });
+
+  it('should parse rating', function() {
+    var res = parser.static.parseFile('./test/data/moto-g.html');
+    var row = res.results[2];
+    assert.equal(row.Extensions.Rating.stars, 5);
+    assert.equal(row.Extensions.Rating.score, 10);
+    assert.equal(row.Extensions.Rating.scoreOf, 10);
+    assert.equal(row.Extensions.Rating.votes, 2);
+
+    var row2 = res.results[9];
+    assert.equal(row2.Extensions.Rating.stars, 5);
+    assert.equal(row2.Extensions.Rating.score, 10);
+    assert.equal(row2.Extensions.Rating.scoreOf, 10);
+    assert.equal(row2.Extensions.Rating.reviewBy, 'Andrew Williams');
+  });
+
+  it('should parse ads', function() {
+    var res = parser.static.parseFile('./test/data/moto-g.html');
+    //console.log(res.ads);
+    var res = parser.static.parseFile('./test/data/android.html');
+    //console.log(res.ads);
+    var res = parser.static.parseFile('./test/data/hotel.html');
+    //console.log(res.ads);
+  });
 });
+
+//require('./test_rich.js')
