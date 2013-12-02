@@ -12,8 +12,7 @@ describe('parser.extended', function () {
 
     var first = data.ads[0];
 
-    // rrrrhhhrhr
-    //assert.equal(first.Title, 'Fly with AirAsia - AirAsia.com');
+    assert.equal(first.Title, 'Fly with AirAsia - AirAsia.com');
 
     assert.equal(first.DisplayURL, 'www.airasia.com/');
     assert.equal(first.Domain, 'www.airasia.com');
