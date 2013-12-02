@@ -1,9 +1,9 @@
 {
-  "name": "google-search-parser",
-  "description": "Google Search ads and results parser",
+  "name": "google-search-ads-parser",
+  "description": "Google Search ads parser",
   "version": "1.0.0",
   "repository": {
-    "url": "git://github.com/ogt/google-search-parser.git"
+    "url": "git://github.com/ogt/google-search-ads-parser.git"
   },
   "main": "index.js",
   "scripts": {
