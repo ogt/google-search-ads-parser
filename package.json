@@ -10,9 +10,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "cheerio": "0.12.4",
-    "needle": "~0.6.3",
-    "phantomjs": "~1.9.2-5"
+    "cheerio": "0.12.4"
   },
   "engines": {
     "node": "*"
